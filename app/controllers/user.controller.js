@@ -31,9 +31,10 @@ const get = async (req,res) => {
 
         const user = await UserService.get(id)
                             .then(userData => {
-                                res.status(200).send({
-                                    userData,
-                                });
+                                if(!userData){
+                                    return http.notFound(res, "Nenhum usuário encontrado");
+                                }
+                                return http.ok(res,userData);
                             });
         return user;
     } catch(error){
@@ -48,9 +49,7 @@ const getAll = async (req,res) => {
 
         const user = await UserService.getAll()
                             .then(userData => {
-                                res.status(200).send({
-                                    userData
-                                });
+                                return http.ok(res,userData);
                             });
         return user;
     } catch(error){
