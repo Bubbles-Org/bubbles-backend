@@ -11,9 +11,7 @@ const create = async (req,res) => {
 
         const createdUser = await UserService.create(data)
                             .then(userData => {
-                                res.status(200).send({
-                                    userData,
-                                });
+                                return http.ok(res,userData);
                             });
         return createdUser;
 
