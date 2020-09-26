@@ -8,7 +8,14 @@ const create = async (req,res) => {
 
         const data = req.body;
         const email = data.email;
-
+        /* Dá erro aqui, investigar
+        const user = await UserService.findByEmail(email)
+                    .then(userData => {
+                        if(userData){
+                            return http.badRequest(res,"Já existe um usuário com este email");
+                        }
+                    })
+*/
         const createdUser = await UserService.create(data)
                             .then(userData => {
                                 return http.ok(res,userData);

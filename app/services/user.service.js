@@ -15,7 +15,7 @@ async function create(data){
 
 async function getByEmail(email){
     try {  
-        const user = await User.find({}, { email });
+        const user = await User.find({ email });
         
         if(!user){
             return null;
