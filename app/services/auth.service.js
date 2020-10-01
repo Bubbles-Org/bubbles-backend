@@ -1,24 +1,32 @@
-const { User } = require('../models');
+const UserService = require('../services/user.service');
+const User = require("../models/user.model");
 
-async function login(email, password) {
+async function login(mail, password) {
     try {
-        const user = await User.find({},{ email });
-        if (!user)
+        let token = null;
+        const user = await User.findOne({ email: mail });
+        
+        if (!user){
             return null;
+        }
 
-        const validPassword = await user.checkPassword(password);
-        if (!validPassword)
+       const validPassword = await user.validatePassword(password);
+        console.log(validPassword);
+        if (!validPassword){
             return null;
+        }
 
-        const {id, name, email} = user;
+        token = user.generateAuthToken();
+
+        const {_id, name, email} = user;
 
         return {
             user: {
-                id, 
+                _id, 
                 name, 
                 email,
             },
-            token: user.generateAuthToken()
+            token: token
         };
     } catch (error) {
         throw error;

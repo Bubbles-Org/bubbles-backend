@@ -1,28 +1,38 @@
 const bcrypt = require('bcryptjs');
+const config = require('../config/enviroment');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
 const { getDateTime } = require('../services/util.service');
+const SALT_WORK_FACTOR = 10;
 
-module.exports = mongoose => {
-    const User = mongoose.model(
-      "user",
-      mongoose.Schema(
-        {
-          name: String,
-          email: String,
-          password: String
-        },
-        { timestamps: true }
-      )
-    );
-  
-    User.prototype.checkPassword = function (password) {
-      return bcrypt.compare(password, this.passwordHash);
-    }
+const UserSchema = new Schema({
+      name: String,
+      email: String,
+      password: String
+});
+    
+    
+UserSchema.pre('save', async function save(next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    this.password = await bcrypt.hash(this.password, salt);
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
 
-    User.prototype.generateAuthToken = function () {
-      const { secret, expiration_days } = config.JWT;
-      return jwt.sign({ id: this.id }, secret, { expiresIn: `${expiration_days}d` });
-    }
+UserSchema.methods.validatePassword = async function validatePassword(data) {
+  return await bcrypt.compareSync(data, this.password);
+};
 
-    return User;
-  };
+UserSchema.methods.generateAuthToken = function () {
+  const { secret, expiration_days } = config.JWT;
+  return jwt.sign({ id: this.id }, secret, { expiresIn: `${expiration_days}d` });
+}
+
+const model = mongoose.model('User', UserSchema);
+
+module.exports = model;

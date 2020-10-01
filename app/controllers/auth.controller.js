@@ -9,9 +9,10 @@ const login = async (req, res) => {
         log.info('Iniciando login', { email });
 
         const result = await service.login(email, password);
-        if (!result)
+        if (!result){
             return http.notFound(res, 'E-mail ou senha inválido(a)');
-
+        }
+        
         log.info('Login finalizado', { email });
 
         const { user, token } = result;
