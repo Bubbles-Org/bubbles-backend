@@ -3,12 +3,16 @@ const { Schema } = require('mongoose');
 
 const BubbleSchema = new Schema({
     name: String,
-    users: [{
-        userId: String
-    }],
-    recomendations: [{
-        recomendationId: String
-    }]
+    users: {
+        user:{
+            userId: String
+        }
+    },
+    recomendations: {
+        recomendation:{
+            recomendationId: String
+        }
+    }
 });
 
 const model = mongoose.model('Bubble', BubbleSchema);

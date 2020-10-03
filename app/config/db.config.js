@@ -1,3 +1,3 @@
 module.exports = {
-    url: "mongodb://localhost:27017/bubbles_db"
+    url: "mongodb+srv://test_bubbles:bubblesp1fra@cluster0.zubwu.mongodb.net/bubbles?retryWrites=true&w=majority"
   };
