@@ -1,5 +1,5 @@
 const db = require("../models");
-const User = db.user;
+const User = require("../models/user.model");
 
 async function create(data){
     try {    
@@ -32,7 +32,7 @@ async function get(id){
         const user = await User.findById(id);
     
         if(!user){
-            return null
+            return null;
         }
         
         return user
