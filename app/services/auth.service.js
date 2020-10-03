@@ -9,9 +9,8 @@ async function login(mail, password) {
         if (!user){
             return null;
         }
-
+        
        const validPassword = await user.validatePassword(password);
-        console.log(validPassword);
         if (!validPassword){
             return null;
         }

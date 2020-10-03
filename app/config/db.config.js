@@ -1,3 +1,5 @@
+const config = require('./enviroment');
+
 module.exports = {
-    url: "mongodb://localhost:27017/bubbles_db"
+    url: config.DB_URL
   };
