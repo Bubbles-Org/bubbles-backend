@@ -2,7 +2,7 @@ const UserService = require('../services/user.service');
 const log = require('../services/log.service');
 const http = require('../services/http.service');
 
-const create = async (req,res) => {
+const create = async (req, res) => {
     try {
         log.info("Iniciando criação de usuário");
 
@@ -17,9 +17,9 @@ const create = async (req,res) => {
                     })
 */
         const createdUser = await UserService.create(data)
-                            .then(userData => {
-                                return http.ok(res,userData);
-                            });
+            .then(userData => {
+                return http.ok(res, userData);
+            });
         return createdUser;
 
     } catch (error) {
@@ -28,37 +28,57 @@ const create = async (req,res) => {
     }
 }
 
-const get = async (req,res) => {
+const get = async (req, res) => {
     try {
         log.info("Iniciando obtenção de usuário");
 
         const id = req.params.id;
 
         const user = await UserService.get(id)
-                            .then(userData => {
-                                if(!userData){
-                                    return http.notFound(res, "Nenhum usuário encontrado");
-                                }
-                                return http.ok(res,userData);
-                            });
+            .then(userData => {
+                if (!userData) {
+                    return http.notFound(res, "Nenhum usuário encontrado");
+                }
+                return http.ok(res, userData);
+            });
         return user;
-    } catch(error){
+    } catch (error) {
         log.error("Erro obter usuário", req.originalUrl, error);
         http.internalServerError(res);
     }
 }
 
-const getAll = async (req,res) => {
+const getAll = async (req, res) => {
     try {
         log.info("Iniciando obtenção de todos os usuários");
 
         const user = await UserService.getAll()
-                            .then(userData => {
-                                return http.ok(res,userData);
-                            });
+            .then(userData => {
+                return http.ok(res, userData);
+            });
         return user;
-    } catch(error){
+    } catch (error) {
         log.error("Erro obter usuários", req.originalUrl, error);
+        http.internalServerError(res);
+    }
+}
+
+const deleteUser = async (req, res) => {
+    try {
+        log.info("Deletando um usuario do sistema");
+
+        const id = req.params.id;
+
+        const user = await UserService.remove(id)
+            .then(userData => {
+                if (!userData) {
+                    return http.notFound(res, "Nenhum usuário encontrado");
+                }
+                return http.ok(res, userData);
+            });
+        return user;
+    } catch (error) {
+        log.error("Erro ao tentar deletar usuario!", res.originalUrl, error);
         http.internalServerError(res);
     }
 }
@@ -66,5 +86,6 @@ const getAll = async (req,res) => {
 module.exports = {
     create,
     get,
-    getAll
+    getAll,
+    deleteUser
 }
