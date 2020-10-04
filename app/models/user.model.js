@@ -25,7 +25,7 @@ UserSchema.pre('save', async function save(next) {
 });
 
 UserSchema.methods.validatePassword = async function validatePassword(data) {
-  return await bcrypt.compareSync(data, this.password);
+  return bcrypt.compareSync(data, this.password);
 };
 
 UserSchema.methods.generateAuthToken = function () {
