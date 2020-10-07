@@ -40,7 +40,7 @@ async function getAll() {
     }
 }
 
-async function deleteBubble() {
+async function deleteBubble(id) {
     try {
         const bubble = await Bubble.deleteOne(id);
         if (!bubble) {
@@ -52,11 +52,28 @@ async function deleteBubble() {
     }
 }
 
+async function updateBubble(id, info) {
+
+    try {
+        const bubble = await Bubble.findById(id);
+        bubble = bubble.update(info);
+        if (!bubble) {
+            return null;
+        }
+        return bubble;
+        return bubble;
+    } catch (error) {
+        return error;
+    }
+
+}
+
 
 
 module.exports = {
     create,
     get,
     getAll,
-    deleteBubble
+    deleteBubble,
+    updateBubble
 }
