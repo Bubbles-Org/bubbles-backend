@@ -10,6 +10,6 @@ RUN \
     apt-get install -y curl htop man unzip vim nano wget net-tools && \
     apt-get update
 
-EXPOSE 8080ls
+EXPOSE 8080
 
 CMD ["sh","-c","npm install && npm start"]
