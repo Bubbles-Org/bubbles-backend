@@ -8,6 +8,7 @@ const create = async (req,res) => {
 
         const data = req.body;
         const email = data.email;
+        const password = data.password;
         /* Dá erro aqui, investigar
         const user = await UserService.findByEmail(email)
                     .then(userData => {
@@ -16,10 +17,12 @@ const create = async (req,res) => {
                         }
                     })
 */
+
         const createdUser = await UserService.create(data)
                             .then(userData => {
                                 return http.ok(res,userData);
                             });
+        
         return createdUser;
 
     } catch (error) {
@@ -34,14 +37,13 @@ const get = async (req,res) => {
 
         const id = req.params.id;
 
-        const user = await UserService.get(id)
-                            .then(userData => {
-                                if(!userData){
-                                    return http.notFound(res, "Nenhum usuário encontrado");
-                                }
-                                return http.ok(res,userData);
-                            });
-        return user;
+        const user = await UserService.get(id);
+
+        if(!user){
+            return http.notFound(res, "Usuário não encontrado");
+        }
+
+        return http.ok(res, user);
     } catch(error){
         log.error("Erro obter usuário", req.originalUrl, error);
         http.internalServerError(res);
@@ -52,11 +54,9 @@ const getAll = async (req,res) => {
     try {
         log.info("Iniciando obtenção de todos os usuários");
 
-        const user = await UserService.getAll()
-                            .then(userData => {
-                                return http.ok(res,userData);
-                            });
-        return user;
+        const user = await UserService.getAll();
+
+        return http.ok(res, user);
     } catch(error){
         log.error("Erro obter usuários", req.originalUrl, error);
         http.internalServerError(res);
