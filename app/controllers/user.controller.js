@@ -27,7 +27,7 @@ const create = async (req,res) => {
 
     } catch (error) {
         log.error("Erro cadastrar usuário", req.originalUrl, error);
-        http.internalServerError(res);
+        return http.internalServerError(res);
     }
 }
 
