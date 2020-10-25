@@ -1,5 +1,5 @@
 const config = require('./enviroment');
 
 module.exports = {
-    url: config.DB_URL
+    url: "mongodb+srv://test_bubbles:bubblesp1fra@cluster0.zubwu.mongodb.net/bubbles?retryWrites=true&w=majority"
   };
