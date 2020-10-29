@@ -27,7 +27,7 @@ const get = async (req, res) => {
                 if (!bubbleData) {
                     return http.notFound(res, "Nenhuma bolha encontradoa");
                 }
-                return http.ok(res, bubbleDataData);
+                return http.ok(res, bubbleData);
             });
         return bubble;
 
@@ -84,5 +84,5 @@ module.exports = {
     create,
     get,
     deleteBubble,
-    update
+    update,
 }

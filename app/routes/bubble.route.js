@@ -6,6 +6,6 @@ const controller = require('../controllers/bubble.controller');
 router.post('/', controller.create);
 router.get('/', controller.get);
 router.delete('/', controller.deleteBubble);
-router.update('/', controller.update);
+router.put('/', controller.update);
 
 module.exports = router;
