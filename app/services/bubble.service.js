@@ -1,7 +1,7 @@
 const db = require("../models");
 const Bubble = db.bubble;
 
-async function create(data){
+async function create(data) {
     try {
         const bubble = new Bubble(data);
         await bubble.save(bubble);
@@ -12,11 +12,11 @@ async function create(data){
     }
 }
 
-async function get(id){
+async function get(id) {
     try {
         const bubble = await Bubble.findById(id);
 
-        if(!bubble){
+        if (!bubble) {
             return null;
         }
 
@@ -26,11 +26,11 @@ async function get(id){
     }
 }
 
-async function getAll(){
+async function getAll() {
     try {
         const bubbles = await Bubble.getAll();
 
-        if(!bubbles){
+        if (!bubbles) {
             return null;
         }
 
@@ -40,8 +40,40 @@ async function getAll(){
     }
 }
 
+async function deleteBubble(id) {
+    try {
+        const bubble = await Bubble.deleteOne(id);
+        if (!bubble) {
+            return null;
+        }
+        return bubble;
+    } catch (error) {
+        return error;
+    }
+}
+
+async function updateBubble(id, info) {
+
+    try {
+        const bubble = await Bubble.findById(id);
+        bubble = bubble.update(info);
+        if (!bubble) {
+            return null;
+        }
+        return bubble;
+        return bubble;
+    } catch (error) {
+        return error;
+    }
+
+}
+
+
+
 module.exports = {
     create,
     get,
-    getAll
+    getAll,
+    deleteBubble,
+    updateBubble
 }

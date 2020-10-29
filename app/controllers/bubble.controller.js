@@ -3,10 +3,10 @@ const log = require('../services/log.service');
 const http = require('../services/http.service');
 
 const create = async (req, res) => {
-    try {   
-        log.info("Iniciando a criação de bolha");    
+    try {
+        log.info("Iniciando a criação de bolha");
         const data = req.body;
-        
+
         const bubble = await BubbleService.create(data);
 
         return http.ok(bubble);
@@ -16,6 +16,73 @@ const create = async (req, res) => {
     }
 }
 
+const get = async (req, res) => {
+
+    try {
+
+        const id = req.params.id;
+
+        const bubble = await BubbleService.get(id)
+            .then(bubbleData => {
+                if (!bubbleData) {
+                    return http.notFound(res, "Nenhuma bolha encontradoa");
+                }
+                return http.ok(res, bubbleData);
+            });
+        return bubble;
+
+    } catch (error) {
+        log.error("Erro ao recuperar bolha", req.originalUrl, error);
+        http.internalServerError(res);
+    }
+
+}
+
+const update = async (req, res) => {
+
+    try {
+
+        const id = req.params.id;
+
+        const bubble = await BubbleService.update(id, info)
+            .then(bubbleData => {
+                if (!bubbleData) {
+                    return http.notFound(res, "Nenhuma bolha encontradoa");
+                }
+                return http.ok(res, bubbleDataData);
+            });
+        return bubble;
+
+    } catch (error) {
+        log.error("Erro ao recuperar bolha", req.originalUrl, error);
+        http.internalServerError(res);
+    }
+
+}
+
+
+const deleteBubble = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const bubble = await BubbleService.deleteBubble(id)
+            .then(bubbleData => {
+                if (!bubbleData) {
+                    return http.notFound(res, "Nenhuma bolha encontradoa");
+                }
+                return http.ok(res, bubbleDataData);
+            });
+        return bubble;
+    }
+    catch (error) {
+        log.error("Erro ao recuperar bolha", req.originalUrl, error);
+        http.internalServerError(res);
+    }
+}
+
 module.exports = {
-    create
+    create,
+    get,
+    deleteBubble,
+    update,
 }
