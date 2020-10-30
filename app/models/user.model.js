@@ -30,7 +30,17 @@ UserSchema.methods.validatePassword = async function validatePassword(data) {
 
 UserSchema.methods.generateAuthToken = function () {
   const { secret, expiration_days } = config.JWT;
-  return jwt.sign({ id: this.id }, secret, { expiresIn: `${expiration_days}d` });
+  return jwt.sign({
+    user: {
+      id: this.id,
+      name: this.name,
+      email: this.email
+    }
+  },
+  secret,
+  {
+    expiresIn: `${expiration_days}d`
+  });
 }
 
 const model = mongoose.model('User', UserSchema);
