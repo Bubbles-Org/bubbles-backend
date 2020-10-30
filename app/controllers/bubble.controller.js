@@ -6,10 +6,8 @@ const create = async (req, res) => {
   try {
     log.info("Iniciando a criação de bolha");
     const data = req.body;
-
-    console.log(req.user);
     const bubble = await BubbleService.create({
-      userId: req.user._id,
+      userIduserId: req.user._id,
       bubble: data,
     });
 
