@@ -18,6 +18,7 @@ module.exports = async function (req, res, next) {
         const decoded = jwt.verify(token, config.JWT.secret);
         const user = await User.findById(decoded.user.id);
         req.user = user
+        next();
     } catch (e) {
         return http.unauthorized(res, 'Você não está autorizado a realizar esta ação');
     }
