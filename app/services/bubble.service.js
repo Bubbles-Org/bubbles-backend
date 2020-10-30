@@ -1,8 +1,10 @@
-const db = require("../models");
-const Bubble = db.bubble;
+const Bubble = require("../models/bubble.model");
 
-async function create(data) {
-  return Bubble.save(data);
+async function create({ userId, bubble }) {
+  return new Bubble({
+    ...bubble,
+    users: [{ userId, role: "owner" }],
+  }).save();
 }
 
 async function get(id) {
@@ -20,17 +22,13 @@ async function get(id) {
 }
 
 async function getAll() {
-  try {
-    const bubbles = await Bubble.getAll();
+  const bubbles = await Bubble.find({});
 
-    if (!bubbles) {
-      return null;
-    }
-
-    return bubbles;
-  } catch (error) {
-    return bubbles;
+  if (!bubbles) {
+    return null;
   }
+
+  return bubbles;
 }
 
 async function deleteBubble(id) {
@@ -52,7 +50,6 @@ async function updateBubble(id, info) {
     if (!bubble) {
       return null;
     }
-    return bubble;
     return bubble;
   } catch (error) {
     return error;

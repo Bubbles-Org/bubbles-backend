@@ -12,6 +12,6 @@ router.use('/auth', auth);
 // Private routes
 router.use(authMiddleware);
 
-router.use('/bubble', bubble);
+router.use('/bubble', authMiddleware, bubble);
 
 module.exports = router;
