@@ -16,6 +16,19 @@ const create = async (req, res) => {
     }
 }
 
+const getAll = async (req, res) => {
+    try {
+        log.info("Iniciando obtenção de todas as bolhas");
+
+        const bubbles = await BubbleService.getAll();
+
+        return http.ok(res, bubbles);
+    } catch (error) {
+        log.error("Erro obter bolhas", req.originalUrl, error);
+        http.internalServerError(res);
+    }
+};
+
 const get = async (req, res) => {
 
     try {
@@ -25,7 +38,7 @@ const get = async (req, res) => {
         const bubble = await BubbleService.get(id)
             .then(bubbleData => {
                 if (!bubbleData) {
-                    return http.notFound(res, "Nenhuma bolha encontradoa");
+                    return http.notFound(res, "Nenhuma bolha encontrada");
                 }
                 return http.ok(res, bubbleData);
             });
@@ -82,6 +95,7 @@ const deleteBubble = async (req, res) => {
 
 module.exports = {
     create,
+    getAll,
     get,
     deleteBubble,
     update,
