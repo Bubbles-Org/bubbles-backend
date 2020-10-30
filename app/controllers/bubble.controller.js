@@ -9,7 +9,7 @@ const create = async (req, res) => {
 
         const bubble = await BubbleService.create(data);
 
-        return http.ok(bubble);
+        return http.ok(res, bubble);
     } catch (error) {
         log.error("Erro cadastrar usuário", req.originalUrl, error);
         return http.internalServerError(res);
