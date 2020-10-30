@@ -1,20 +1,20 @@
-const bcrypt = require('bcryptjs');
-const config = require('../config/enviroment');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
-const { Schema } = require('mongoose');
-const { getDateTime } = require('../services/util.service');
+const bcrypt = require("bcryptjs");
+const config = require("../config/enviroment");
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const { Schema } = require("mongoose");
+const { getDateTime } = require("../services/util.service");
 const SALT_WORK_FACTOR = 10;
 
 const UserSchema = new Schema({
-      name: String,
-      email: String,
-      password: String
+  name: String,
+  email: String,
+  password: String,
+  bubbles: { type: Schema.Types.ObjectId, ref: "Bubble" },
 });
-    
-    
-UserSchema.pre('save', async function save(next) {
-  if (!this.isModified('password')) return next();
+
+UserSchema.pre("save", async function save(next) {
+  if (!this.isModified("password")) return next();
   try {
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
     this.password = await bcrypt.hash(this.password, salt);
@@ -43,6 +43,6 @@ UserSchema.methods.generateAuthToken = function () {
   });
 }
 
-const model = mongoose.model('User', UserSchema);
+const model = mongoose.model("User", UserSchema);
 
 module.exports = model;

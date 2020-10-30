@@ -5,15 +5,16 @@ const BubbleSchema = new Schema({
   name: String,
   users: [
     {
-      userId: String,
+      userId: { type: Schema.Types.ObjectId, ref: "User" },
       role: String,
     },
   ],
-  recomendations: {
-    recomendation: {
-      recomendationId: String,
+  recomendations: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Recomendation",
     },
-  },
+  ],
 });
 
 const model = mongoose.model("Bubble", BubbleSchema);

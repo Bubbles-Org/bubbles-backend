@@ -1,8 +1,8 @@
 const db = require("../models");
 const Bubble = db.bubble;
 
-async function create(data) {
-  return Bubble.save(data);
+async function create({ userId, bubble }) {
+  return Bubble.save({ ...bubble, users: [{ userId, role: "owner" }] });
 }
 
 async function get(id) {

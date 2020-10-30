@@ -10,8 +10,8 @@ const bubble = require('./app/routes/bubble.route');
 router.use('/user', user);
 router.use('/auth', auth);
 // Private routes
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
-router.use('/bubble', bubble);
+router.use('/bubble', authMiddleware, bubble);
 
 module.exports = router;
