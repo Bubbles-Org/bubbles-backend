@@ -1,4 +1,3 @@
-const UserService = require('../services/user.service');
 const User = require("../models/user.model");
 
 async function login(mail, password) {
