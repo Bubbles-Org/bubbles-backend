@@ -25,7 +25,7 @@ async function get(id) {
 
 async function getAll({ userId }) {
 
-  const bubbles = await Bubble.find({ "users.userId": mongoose.mongo.ObjectId(userId) });
+  const bubbles = await Bubble.find({ "users.userId": mongoose.Types.ObjectId(userId) });
 
   if (!bubbles) {
     return null;
