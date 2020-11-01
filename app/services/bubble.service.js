@@ -1,9 +1,11 @@
+var mongoose = require('mongoose');
+
 const Bubble = require("../models/bubble.model");
 
 async function create({ userId, bubble }) {
   return new Bubble({
     ...bubble,
-    users: [{ userId, role: "owner" }],
+    users: [{ "userId": mongoose.Types.ObjectId(userId), role: "owner" }],
   }).save();
 }
 
@@ -21,8 +23,9 @@ async function get(id) {
   }
 }
 
-async function getAll() {
-  const bubbles = await Bubble.find({});
+async function getAll({ userId }) {
+
+  const bubbles = await Bubble.find({ "users.userId": mongoose.mongo.ObjectId(userId) });
 
   if (!bubbles) {
     return null;
