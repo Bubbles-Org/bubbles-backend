@@ -7,7 +7,7 @@ const create = async (req, res) => {
     log.info("Iniciando a criação de bolha");
     const data = req.body;
     const bubble = await BubbleService.create({
-      userIduserId: req.user._id,
+      userId: req.user._id,
       bubble: data,
     });
 
@@ -19,37 +19,37 @@ const create = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-    try {
-        log.info("Iniciando obtenção de todas as bolhas");
+  try {
+    log.info("Iniciando obtenção de todas as bolhas");
 
-        const bubbles = await BubbleService.getAll();
+    const bubbles = await BubbleService.getAll({ userId: req.user._id });
 
-        return http.ok(res, bubbles);
-    } catch (error) {
-        log.error("Erro obter bolhas", req.originalUrl, error);
-        http.internalServerError(res);
-    }
+    return http.ok(res, bubbles);
+  } catch (error) {
+    log.error("Erro obter bolhas", req.originalUrl, error);
+    http.internalServerError(res);
+  }
 };
 
 const get = async (req, res) => {
 
-    try {
+  try {
 
-        const id = req.params.id;
+    const id = req.params.id;
 
-        const bubble = await BubbleService.get(id)
-            .then(bubbleData => {
-                if (!bubbleData) {
-                    return http.notFound(res, "Nenhuma bolha encontrada");
-                }
-                return http.ok(res, bubbleData);
-            });
-        return bubble;
+    const bubble = await BubbleService.get(id)
+      .then(bubbleData => {
+        if (!bubbleData) {
+          return http.notFound(res, "Nenhuma bolha encontrada");
+        }
+        return http.ok(res, bubbleData);
+      });
+    return bubble;
 
-    } catch (error) {
-        log.error("Erro ao recuperar bolha", req.originalUrl, error);
-        http.internalServerError(res);
-    }
+  } catch (error) {
+    log.error("Erro ao recuperar bolha", req.originalUrl, error);
+    http.internalServerError(res);
+  }
 
 }
 
@@ -88,9 +88,9 @@ const deleteBubble = async (req, res) => {
 };
 
 module.exports = {
-    create,
-    getAll,
-    get,
-    deleteBubble,
-    update,
+  create,
+  getAll,
+  get,
+  deleteBubble,
+  update,
 }
