@@ -32,26 +32,19 @@ const getAll = async (req, res) => {
 };
 
 const get = async (req, res) => {
-
   try {
-
     const id = req.params.id;
 
-    const bubble = await BubbleService.get(id)
-      .then(bubbleData => {
-        if (!bubbleData) {
-          return http.notFound(res, "Nenhuma bolha encontrada");
-        }
-        return http.ok(res, bubbleData);
-      });
-    return bubble;
-
+    const bubble = await BubbleService.get(id);
+    if (!bubble) {
+      return http.notFound(res, "Nenhuma bolha encontrada");
+    }
+    return http.ok(res, bubble);
   } catch (error) {
     log.error("Erro ao recuperar bolha", req.originalUrl, error);
     http.internalServerError(res);
   }
-
-}
+};
 
 const update = async (req, res) => {
   try {
@@ -87,10 +80,27 @@ const deleteBubble = async (req, res) => {
   }
 };
 
+const addUser = async (req, res) => {
+  try {
+    const { role, emailToAdd, bubbleId } = req.body;
+    const added = await BubbleService.addUser({
+      userId: req.user._id,
+      emailToAdd,
+      role,
+      bubbleId,
+    });
+    return added;
+  } catch (error) {
+    log.error("Erro ao adicionar usuario a bolha", req.originalUrl, error);
+    http.internalServerError(res);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   get,
   deleteBubble,
   update,
-}
+  addUser,
+};

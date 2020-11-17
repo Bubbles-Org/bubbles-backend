@@ -3,6 +3,8 @@ const { Schema } = require("mongoose");
 
 const BubbleSchema = new Schema({
   name: String,
+  private: Boolean,
+  moderation: Boolean,
   users: [
     {
       userId: { type: Schema.Types.ObjectId, ref: "User" },
