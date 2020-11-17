@@ -1,13 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
 const routes = require("./routes");
 
 const app = express();
-
-const config = require("./app/config/enviroment");
-
-app.use(cors({ origin: new RegExp(config.ALLOWED_ORIGIN + ".*") }));
 
 app.use(bodyParser.json());
 
