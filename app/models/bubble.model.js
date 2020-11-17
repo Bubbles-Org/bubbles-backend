@@ -7,7 +7,11 @@ const BubbleSchema = new Schema({
   moderation: Boolean,
   users: [
     {
-      userId: { type: Schema.Types.ObjectId, ref: "User" },
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
       role: String,
     },
   ],

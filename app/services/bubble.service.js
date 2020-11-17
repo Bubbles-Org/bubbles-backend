@@ -18,7 +18,9 @@ async function get(id) {
 async function getAll({ userId }) {
   const bubbles = await Bubble.find({
     "users.userId": mongoose.Types.ObjectId(userId),
-  });
+  })
+    .populate("users.userId.name")
+    .execPopulate();
 
   if (!bubbles) {
     return null;
@@ -40,44 +42,27 @@ async function deleteBubble(id) {
 }
 
 async function updateBubble(id, info) {
-  try {
-    const bubble = await Bubble.findById(id);
-    bubble = bubble.update(info);
-    if (!bubble) {
-      return null;
-    }
-    return bubble;
-  } catch (error) {
-    return error;
-  }
+  return Bubble.findByIdAndUpdate(id, { $set: { ...info } }, { new: true });
 }
 
 async function addUser({ userId, emailToAdd, role, bubbleId }) {
   const userObjId = mongoose.Types.ObjectId(userId);
   const [{ _id: userToAdd }] = await userService.getByEmail(emailToAdd);
   const bubbleToUpdate = await get(bubbleId);
-  if (bubbleToUpdate.private) {
-    console.log(bubbleToUpdate)
-    console.log(userToAdd)
-    return Bubble.findOneAndUpdate(
-      {
-        "users.userId": userObjId,
+  return Bubble.findOneAndUpdate(
+    {
+      "users.userId": { $ne: userToAdd, $eq: userObjId },
+      ...(bubbleToUpdate.private && {
         "users.role": { $in: ["owner", "moderator"] },
+      }),
+    },
+    {
+      $push: {
+        users: { userId: userToAdd, role },
       },
-      {
-        $push: {
-          users: { userId: userToAdd, role },
-        },
-      },
-      { useFindAndModify: false, new: true },
-    )
-  } else {
-    bubbleToUpdate.users.push({
-      userId: userToAdd,
-      role,
-    });
-    return bubbleToUpdate.save();
-  }
+    },
+    { useFindAndModify: false, new: true }
+  );
 }
 
 module.exports = {

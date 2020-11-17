@@ -48,15 +48,13 @@ const get = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { info, id } = req.body;
 
-    const bubble = await BubbleService.update(id, info).then((bubbleData) => {
-      if (!bubbleData) {
-        return http.notFound(res, "Nenhuma bolha encontradoa");
-      }
-      return http.ok(res, bubbleDataData);
-    });
-    return bubble;
+    const bubble = await BubbleService.updateBubble(id, info);
+    if (!bubble) {
+      return http.notFound(res, "Nenhuma bolha encontradoa");
+    }
+    return http.ok(res, bubble);
   } catch (error) {
     log.error("Erro ao recuperar bolha", req.originalUrl, error);
     http.internalServerError(res);
@@ -71,7 +69,7 @@ const deleteBubble = async (req, res) => {
       if (!bubbleData) {
         return http.notFound(res, "Nenhuma bolha encontradoa");
       }
-      return http.ok(res, bubbleDataData);
+      return http.ok(res, bubbleData);
     });
     return bubble;
   } catch (error) {
@@ -89,7 +87,7 @@ const addUser = async (req, res) => {
       role,
       bubbleId,
     });
-    return added;
+    return http.ok(res, added);
   } catch (error) {
     log.error("Erro ao adicionar usuario a bolha", req.originalUrl, error);
     http.internalServerError(res);
