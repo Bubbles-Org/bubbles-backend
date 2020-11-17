@@ -16,11 +16,20 @@ async function get(id) {
 }
 
 async function getAll({ userId }) {
-  const bubbles = await Bubble.find({
-    "users.userId": mongoose.Types.ObjectId(userId),
-  })
-    .populate("users.userId.name")
-    .execPopulate();
+  let bubbles = await Bubble.find(
+    {
+      "users.userId": mongoose.Types.ObjectId(userId),
+    },
+    { name: 1, users: 1 }
+  );
+
+  bubbles.forEach((bubble) => {
+    bubble.users = bubble.users.filter(({ role }) => role === "owner");
+  });
+  bubbles = await Bubble.populate(bubbles, {
+    path: "users.userId",
+    select: "name -_id",
+  });
 
   if (!bubbles) {
     return null;
