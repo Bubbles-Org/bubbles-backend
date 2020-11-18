@@ -8,5 +8,6 @@ router.get('/', controller.getAll);
 router.get('/:id', controller.get);
 router.delete('/', controller.deleteBubble);
 router.put('/', controller.update);
+router.put('/add-user', controller.addUser);
 
 module.exports = router;

@@ -9,8 +9,7 @@ const schema = new Schema({
   },
   tags: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tag",
+      type: [String]
     },
   ],
 });

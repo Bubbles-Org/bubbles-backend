@@ -1,31 +1,35 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
+const user = require("../middlewares/validators/user");
 
 const Bubble = require("../models/bubble.model");
+const userService = require("./user.service");
 
 async function create({ userId, bubble }) {
   return new Bubble({
     ...bubble,
-    users: [{ "userId": mongoose.Types.ObjectId(userId), role: "owner" }],
+    users: [{ userId: mongoose.Types.ObjectId(userId), role: "owner" }],
   }).save();
 }
 
 async function get(id) {
-  try {
-    const bubble = await Bubble.findById(id);
-
-    if (!bubble) {
-      return null;
-    }
-
-    return bubble;
-  } catch (error) {
-    return error;
-  }
+  return Bubble.findById(id);
 }
 
 async function getAll({ userId }) {
+  let bubbles = await Bubble.find(
+    {
+      "users.userId": mongoose.Types.ObjectId(userId),
+    },
+    { name: 1, users: 1 }
+  );
 
-  const bubbles = await Bubble.find({ "users.userId": mongoose.Types.ObjectId(userId) });
+  bubbles.forEach((bubble) => {
+    bubble.users = bubble.users.filter(({ role }) => role === "owner");
+  });
+  bubbles = await Bubble.populate(bubbles, {
+    path: "users.userId",
+    select: "name -_id",
+  });
 
   if (!bubbles) {
     return null;
@@ -47,16 +51,27 @@ async function deleteBubble(id) {
 }
 
 async function updateBubble(id, info) {
-  try {
-    const bubble = await Bubble.findById(id);
-    bubble = bubble.update(info);
-    if (!bubble) {
-      return null;
-    }
-    return bubble;
-  } catch (error) {
-    return error;
-  }
+  return Bubble.findByIdAndUpdate(id, { $set: { ...info } }, { new: true });
+}
+
+async function addUser({ userId, emailToAdd, role, bubbleId }) {
+  const userObjId = mongoose.Types.ObjectId(userId);
+  const [{ _id: userToAdd }] = await userService.getByEmail(emailToAdd);
+  const bubbleToUpdate = await get(bubbleId);
+  return Bubble.findOneAndUpdate(
+    {
+      "users.userId": { $ne: userToAdd, $eq: userObjId },
+      ...(bubbleToUpdate.private && {
+        "users.role": { $in: ["owner", "moderator"] },
+      }),
+    },
+    {
+      $push: {
+        users: { userId: userToAdd, role },
+      },
+    },
+    { useFindAndModify: false, new: true }
+  );
 }
 
 module.exports = {
@@ -65,4 +80,5 @@ module.exports = {
   getAll,
   deleteBubble,
   updateBubble,
+  addUser,
 };
