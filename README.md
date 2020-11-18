@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Bubbles-Org/bubbles-backend.svg?branch=master)](https://travis-ci.org/Bubbles-Org/bubbles-backend)
 # bubbles-backend
 
 ## Preparação do ambiente
