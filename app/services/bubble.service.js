@@ -13,7 +13,7 @@ async function create({ userId, bubble }) {
 }
 
 async function get(id) {
-  return Bubble.findById(id);
+  return Bubble.findById(id).populate("recomendations").exec();
 }
 
 async function getAll({ userId }) {
@@ -66,7 +66,7 @@ async function updateBubble(id, info) {
       }
     },
     { useFindAndModify: false, new: true }
-  );
+  ).populate("recomendations");
 }
 
 async function addUser({ userId, emailToAdd, role, bubbleId }) {
