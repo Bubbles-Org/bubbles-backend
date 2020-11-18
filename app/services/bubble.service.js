@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 const user = require("../middlewares/validators/user");
 
 const Bubble = require("../models/bubble.model");
+const Recomendation = require("../models/recomendation.model")
 const userService = require("./user.service");
 
 async function create({ userId, bubble }) {
@@ -12,7 +13,7 @@ async function create({ userId, bubble }) {
 }
 
 async function get(id) {
-  return Bubble.findById(id);
+  return Bubble.findById(id).populate("recomendations").exec();
 }
 
 async function getAll({ userId }) {
@@ -51,7 +52,21 @@ async function deleteBubble(id) {
 }
 
 async function updateBubble(id, info) {
-  return Bubble.findByIdAndUpdate(id, { $set: { ...info } }, { new: true });
+  recomendation = await new Recomendation({
+    text: info.text,
+    tags: info.tags,
+    user: mongoose.Types.ObjectId(info.userId),
+  }).save();
+
+  return Bubble.findByIdAndUpdate(
+    id,
+    {
+      $push: {
+        recomendations: recomendation
+      }
+    },
+    { useFindAndModify: false, new: true }
+  ).populate("recomendations");
 }
 
 async function addUser({ userId, emailToAdd, role, bubbleId }) {
