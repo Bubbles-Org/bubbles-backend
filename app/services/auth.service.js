@@ -31,4 +31,30 @@ async function login(mail, password) {
     }
 }
 
-module.exports = { login }
+async function googleLogin(mail, nome) {
+    try {
+        let token = null;
+        let user = await User.findOne({ email: mail, name: nome });
+        
+        if (!user){
+            user = await new User({ email: mail, name: nome }).save();
+        }
+
+        token = user.generateAuthToken();
+
+        const {_id, name, email} = user;
+
+        return {
+            user: {
+                _id, 
+                name, 
+                email,
+            },
+            token: token
+        };
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = { login, googleLogin }
