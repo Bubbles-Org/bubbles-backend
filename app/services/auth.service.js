@@ -31,13 +31,13 @@ async function login(mail, password) {
     }
 }
 
-async function googleLogin(mail, nome) {
+async function googleLogin(mail, username) {
     try {
         let token = null;
-        let user = await User.findOne({ email: mail, name: nome });
+        let user = await User.findOne({ email: mail, name: username });
         
         if (!user){
-            user = await new User({ email: mail, name: nome }).save();
+            user = await new User({ email: mail, name: username }).save();
         }
 
         token = user.generateAuthToken();
